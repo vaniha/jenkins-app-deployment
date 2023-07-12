@@ -5,7 +5,7 @@ pipeline {
     dockerImage = ""
   }
 
-  agent any
+  agent { label 'dind-agent'}
 
   stages {
 
@@ -39,9 +39,10 @@ pipeline {
     stage('Deploying App to Kubernetes') {
       steps {
         script {
-          kubernetesDeploy(configs: "deployment.yaml", "service.yaml")
+          kubernetesDeploy(configs: "deployment.yaml", kubeconfigId: "kubernetes");
+          kubernetesDeploy(configs: "service.yaml", kubeconfigId: "kubernetes");
         }
-      }
+        }
     }
 
   }
